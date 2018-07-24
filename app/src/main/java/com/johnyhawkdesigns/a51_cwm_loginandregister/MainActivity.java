@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 etEmail.setText("");
                 etPassword.setText("");
 
-                //Execute the task
-                //Passess the params to backgroundTask param(0), param(1), param(2)
+                //Execute the Login task- Passes the params to backgroundTask param[0], param[1], param[2]
                 backgroundTask.execute(task, stringEmail, stringPassword);
 
             }

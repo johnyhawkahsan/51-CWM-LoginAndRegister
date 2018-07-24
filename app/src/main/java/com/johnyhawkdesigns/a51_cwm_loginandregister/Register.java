@@ -33,6 +33,8 @@ public class Register extends AppCompatActivity {
 
                 String task = "register";
                 BackgroundTask backgroundTask = new BackgroundTask(Register.this);
+
+                //Execute the register task- Passes the params to backgroundTask in the form param[0], param[1], param[2], param[3]
                 backgroundTask.execute(task, name, email, password);
                 finish();
             }
