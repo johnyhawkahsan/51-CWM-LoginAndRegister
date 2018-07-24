@@ -33,7 +33,6 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-
     Context context;
 
     BackgroundTask(Context context){
@@ -48,8 +47,10 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
         editor.putString("flag", "0");
         editor.commit();
 
-        String urlRegistration = "http://localhost/sql-connection/LoginAndRegister-register.php";
-        String urlLogin = "http://localhost/sql-connection/LoginAndRegister-login.php";
+        //https://stackoverflow.com/questions/18341652/connect-failed-econnrefused
+        //"localhost" should be replaced with "10.0.2.2", For Genymotion use: "10.0.3.2" instead of 10.0.2.2
+        String urlRegistration = "http://10.0.3.2/sql-connection/LoginAndRegister-register.php";
+        String urlLogin = "http://10.0.3.2/sql-connection/LoginAndRegister-login.php";
 
         String task = params[0]; //Get params at 0 index
         Log.d(TAG, "doInBackground: task = " + task);
@@ -73,6 +74,9 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                         + URLEncoder.encode("identifier_password", "UTF-8") + "=" + URLEncoder.encode(regPassword, "UTF-8");
 
                 //Note: identifier_name, identifier_email and identifier_password are same as in our PHP file
+
+                Log.d(TAG, "doInBackground: Register Task myData = " + myData);
+
                 bufferedWriter.write(myData);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -104,12 +108,14 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
 
-                //Set the email and password to the database
+                //send the email and password to the database
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
                 BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
                 String myData = URLEncoder.encode("identifier_email", "UTF-8") + "=" + URLEncoder.encode(loginEmail, "UTF-8") + "&"
                         + URLEncoder.encode("identifier_loginPassword", "UTF-8") + "=" + URLEncoder.encode(loginPassword, "UTF-8");
+
+                Log.d(TAG, "doInBackground: Login Task myData = " + myData);
 
                 bufferedWriter.write(myData);
                 bufferedWriter.flush();
