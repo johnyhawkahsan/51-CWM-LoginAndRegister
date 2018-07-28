@@ -40,7 +40,9 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    //params are multiple values params[0], params[1], params[2], params[3] received from the calling activity when se used backgroundTask.execute()
+    protected String doInBackground(String... params) //the three dot stays for vargars. you can access it like a String[].
+    {
 
         sharedPreferences = context.getSharedPreferences("MYPREFS", MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -55,6 +57,7 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
         String task = params[0]; //Get params at 0 index
         Log.d(TAG, "doInBackground: task = " + task);
 
+        //For registration method, we want to prepare a "POST" method to post to our server. Inside server, we have php code to process this POST request.
         if (task.equals("register")){
             String regName = params[1];
             String regEmail = params[2];
@@ -65,7 +68,7 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST"); //This should match our PHP Post method
-                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoOutput(true);//set to true because we want url for output
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
                 BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
@@ -78,13 +81,14 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 Log.d(TAG, "doInBackground: Register Task myData = " + myData);
 
                 bufferedWriter.write(myData);
-                bufferedWriter.flush();
+                bufferedWriter.flush();//Flushing output on a buffered stream means transmitting all accumulated characters to the file.
                 bufferedWriter.close();
 
+                //Read the input data using InputStream after successfully registration process is completed in OutputStream
                 InputStream inputStream = httpURLConnection.getInputStream();
                 inputStream.close();
 
-                editor.putString("flag", "register");
+                editor.putString("flag", "register"); //Set flag to "register" for further processing in Post Execute
                 editor.commit();
                 return "Successfully Registered " + regName;
 
@@ -96,7 +100,7 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
             }
 
 
-            //If task equals Login
+            //If task equals LoggedInActivity
         }  else if (task.equals("login")){
             String loginEmail = params[1];
             String loginPassword = params[2];
@@ -105,8 +109,8 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 URL url = new URL(urlLogin);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);//set to true because we want url for output
+                httpURLConnection.setDoInput(true);//set to true because we want url for input as well
 
                 //send the email and password to the database
                 OutputStream outputStream = httpURLConnection.getOutputStream();
@@ -115,7 +119,7 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 String myData = URLEncoder.encode("identifier_email", "UTF-8") + "=" + URLEncoder.encode(loginEmail, "UTF-8") + "&"
                         + URLEncoder.encode("identifier_loginPassword", "UTF-8") + "=" + URLEncoder.encode(loginPassword, "UTF-8");
 
-                Log.d(TAG, "doInBackground: Login Task myData = " + myData);
+                Log.d(TAG, "doInBackground: Log in Task myData = " + myData);
 
                 bufferedWriter.write(myData);
                 bufferedWriter.flush();
@@ -165,6 +169,10 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
         if (flag.equals("register")){
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+
+            //@Ahsan = After successfully signing up, we need to go back to Main Activity
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
         }
 
         else if (flag.equals("login")){
@@ -183,14 +191,14 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 editor.putString("email", email);
                 editor.commit();
 
-                Intent intent = new Intent(context, Login.class);
+                Intent intent = new Intent(context, LoggedInActivity.class);
                 context.startActivity(intent);
             } else {
-                display("Login Failed...", "That email and password do not match our records :(");
+                display("LoggedInActivity Failed...", "That email and password do not match our records :(");
             }
 
         } else {
-            display("Login Failed....", "Something weird happened :(");
+            display("LoggedInActivity Failed....", "Something weird happened :(");
         }
     }
 

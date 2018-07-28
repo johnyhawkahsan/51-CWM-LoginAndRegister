@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class Login extends AppCompatActivity {
+public class LoggedInActivity extends AppCompatActivity {
 
 
     TextView name,email;
@@ -19,6 +19,7 @@ public class Login extends AppCompatActivity {
         email = (TextView) findViewById(R.id.textEmail);
         name = (TextView) findViewById(R.id.textName);
 
+        //Get stored preferences stored in the system with String identifier "MYPREFS"
         preferences = this.getSharedPreferences("MYPREFS", MODE_PRIVATE);
 
         String mName = preferences.getString("name","ERROR getting name");

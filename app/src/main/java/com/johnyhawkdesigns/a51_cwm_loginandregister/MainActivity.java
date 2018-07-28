@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
-        //Login user methods
+        //LoggedInActivity user methods
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 etEmail.setText("");
                 etPassword.setText("");
 
-                //Execute the Login task- Passes the params to backgroundTask param[0], param[1], param[2]
+                //Execute the LoggedInActivity task- Passes the params to backgroundTask param[0], param[1], param[2]
                 backgroundTask.execute(task, stringEmail, stringPassword);
 
             }
